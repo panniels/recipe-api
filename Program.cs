@@ -1,10 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+
+using RecipeApi.Data;
 using RecipeApi.Models;
 using RecipeApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<RecipeService>();
+
+builder.Services.AddDbContext<RecipeDBContext>(options =>
+    options.UseSqlite("Data Source=recipes.db"));
+
+builder.Services.AddScoped<RecipeService>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
