@@ -7,36 +7,25 @@ namespace RecipeApi.Controllers
     [Route("api/[controller]")]
     public class RecipeController : ControllerBase
     {
+        private static List<Recipe> _recipes = new();
+        
+
         [HttpGet]
         public IEnumerable<Recipe> GetRecipes()
         {
-            return new List<Recipe>
-            {
-                new Recipe
-                {
-                    Name = "Test Recipe",
-                    CookingTime = 30,
-                    Difficulty = "Medium",
-                    Ingredients = new List<Ingredient>
-                    {
-                        new Ingredient { Name = "Flour", Quantity = 2, Unit = "cups" },
-                        new Ingredient { Name = "Sugar", Quantity = 1, Unit = "cup" },
-                        new Ingredient { Name = "Eggs", Quantity = 3, Unit = "pieces" }
-                    }
-                },
-                new Recipe
-                {
-                    Name = "Another Recipe",
-                    CookingTime = 45,
-                    Difficulty = "Hard",
-                    Ingredients = new List<Ingredient>
-                    {
-                        new Ingredient { Name = "Butter", Quantity = 1, Unit = "stick" },
-                        new Ingredient { Name = "Milk", Quantity = 2, Unit = "cups" },
-                        new Ingredient { Name = "Vanilla Extract", Quantity = 1, Unit = "teaspoon" }
-                    }
-                }
-            };
+            return _recipes;
+        }
+
+
+        [HttpPost]
+        public IActionResult CreateRecipe([FromBody] Recipe recipe)
+        {
+            // Here you would typically save the recipe to a database or perform other actions.
+            // For this example, we'll just return the created recipe with a 201 Created status.
+
+            _recipes.Add(recipe); // Add the new recipe to the list
+
+            return CreatedAtAction(nameof(GetRecipes), new { name = recipe.Name }, recipe);
         }
     }
 }

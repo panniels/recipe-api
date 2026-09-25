@@ -43,3 +43,4 @@ C:\Users\phili\Documents\Personlige projekter\RecipeApi\bin\Debug\net9.0\NSwag.C
 C:\Users\phili\Documents\Personlige projekter\RecipeApi\bin\Debug\net9.0\NSwag.Generation.dll
 C:\Users\phili\Documents\Personlige projekter\RecipeApi\bin\Debug\net9.0\NSwag.Generation.AspNetCore.dll
 C:\Users\phili\Documents\Personlige projekter\RecipeApi\bin\Debug\net9.0\YamlDotNet.dll
+C:\Users\phili\Documents\Personlige projekter\RecipeApi\obj\Debug\net9.0\RecipeApi.sourcelink.json
