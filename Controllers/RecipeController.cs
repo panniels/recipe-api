@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using RecipeApi.Models;
+using RecipeApi.Services;
 
 namespace RecipeApi.Controllers
 {
@@ -7,13 +8,18 @@ namespace RecipeApi.Controllers
     [Route("api/[controller]")]
     public class RecipeController : ControllerBase
     {
-        private static List<Recipe> _recipes = new();
+        private readonly RecipeService _recipeService;
+
+        public RecipeController(RecipeService recipeService)
+        {
+            _recipeService = recipeService;
+        }
         
 
         [HttpGet]
         public IEnumerable<Recipe> GetRecipes()
         {
-            return _recipes;
+            return _recipeService.GetAllRecipes();
         }
 
 
@@ -23,7 +29,7 @@ namespace RecipeApi.Controllers
             // Here you would typically save the recipe to a database or perform other actions.
             // For this example, we'll just return the created recipe with a 201 Created status.
 
-            _recipes.Add(recipe); // Add the new recipe to the list
+            _recipeService.AddRecipe(recipe); // Add the new recipe to the list
 
             if (recipe == null)
             {
@@ -36,7 +42,7 @@ namespace RecipeApi.Controllers
         [HttpGet("{id}")]
         public IActionResult GetRecipeById(int id)
         {
-            var recipe = _recipes.FirstOrDefault(r => r.Id == id);
+            var recipe = _recipeService.GetAllRecipes().FirstOrDefault(r => r.Id == id);
             if (recipe == null)
             {
                 return NotFound();
@@ -47,19 +53,19 @@ namespace RecipeApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteRecipe(int id)
         {
-            var recipe = _recipes.FirstOrDefault(r => r.Id == id);
+            var recipe = _recipeService.GetAllRecipes().FirstOrDefault(r => r.Id == id);
             if (recipe == null)
             {
                 return NotFound();
             }
-            _recipes.Remove(recipe);
+            _recipeService.DeleteRecipe(recipe); // Assuming you have a DeleteRecipe method in your service
             return NoContent();
         }
 
         [HttpPut("{id}")]
         public IActionResult UpdateRecipe(int id, [FromBody] Recipe recipe)
         {
-            var existingRecipe = _recipes.FirstOrDefault(r => r.Id == id);
+            var existingRecipe = _recipeService.GetAllRecipes().FirstOrDefault(r => r.Id == id);
             if (existingRecipe == null)
             {
                 return NotFound();
