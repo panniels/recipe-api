@@ -17,32 +17,30 @@ namespace RecipeApi.Controllers
         
 
         [HttpGet]
-        public IEnumerable<Recipe> GetRecipes()
+        public async Task<IActionResult> GetRecipes()
         {
-            return _recipeService.GetAllRecipes();
+            var recipes = await _recipeService.GetAllRecipesAsync();
+            return Ok(recipes);
         }
 
 
         [HttpPost]
-        public IActionResult CreateRecipe([FromBody] Recipe recipe)
+        public async Task<IActionResult> CreateRecipe([FromBody] Recipe recipe)
         {
-            // Here you would typically save the recipe to a database or perform other actions.
-            // For this example, we'll just return the created recipe with a 201 Created status.
-
-            _recipeService.AddRecipe(recipe); // Add the new recipe to the list
-
             if (recipe == null)
             {
                 return BadRequest("Recipe cannot be null.");
             }
 
-            return CreatedAtAction(nameof(GetRecipes), new { name = recipe.Name }, recipe);
+            await _recipeService.AddRecipeAsync(recipe); 
+
+            return CreatedAtAction(nameof(GetRecipeById), new { id = recipe.Id }, recipe);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetRecipeById(int id)
+        public async Task<IActionResult> GetRecipeById(int id)
         {
-            var recipe = _recipeService.GetAllRecipes().FirstOrDefault(r => r.Id == id);
+            var recipe = await _recipeService.GetRecipeByIdAsync(id);
             if (recipe == null)
             {
                 return NotFound();
@@ -51,21 +49,16 @@ namespace RecipeApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteRecipe(int id)
+        public async Task<IActionResult> DeleteRecipe(int id)
         {
-            var recipe = _recipeService.GetAllRecipes().FirstOrDefault(r => r.Id == id);
-            if (recipe == null)
-            {
-                return NotFound();
-            }
-            _recipeService.DeleteRecipe(recipe); // Assuming you have a DeleteRecipe method in your service
+            await _recipeService.DeleteRecipeByIdAsync(id);
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateRecipe(int id, [FromBody] Recipe recipe)
+        public async Task<IActionResult> UpdateRecipe(int id, [FromBody] Recipe recipe)
         {
-            var existingRecipe = _recipeService.GetAllRecipes().FirstOrDefault(r => r.Id == id);
+            var existingRecipe = await _recipeService.GetRecipeByIdAsync(id);
             if (existingRecipe == null)
             {
                 return NotFound();
@@ -76,6 +69,7 @@ namespace RecipeApi.Controllers
             existingRecipe.Difficulty = recipe.Difficulty;
             existingRecipe.Ingredients = recipe.Ingredients;
 
+            await _recipeService.UpdateRecipeAsync(existingRecipe);
             return Ok(existingRecipe);
         }
     }

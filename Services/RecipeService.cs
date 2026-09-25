@@ -13,35 +13,41 @@ public class RecipeService
         _context = context;
     }
 
-    public List<Recipe> GetAllRecipes()
+    public async Task<List<Recipe>> GetAllRecipesAsync()
     {
-        return _context.Recipes.Include(r => r.Ingredients).ToList();
+        return await _context.Recipes.Include(r => r.Ingredients).ToListAsync();
     }
 
-    public void AddRecipe(Recipe recipe)
+    public async Task AddRecipeAsync(Recipe recipe)
     {
         _context.Recipes.Add(recipe);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public void DeleteRecipe(Recipe recipe)
+    public async Task DeleteRecipeAsync(Recipe recipe)
     {
         _context.Recipes.Remove(recipe);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public Recipe? GetRecipeById(int id)
+    public async Task<Recipe?> GetRecipeByIdAsync(int id)
     {
-        return _context.Recipes.Include(r => r.Ingredients).FirstOrDefault(r => r.Id == id);
+        return await _context.Recipes.Include(r => r.Ingredients).FirstOrDefaultAsync(r => r.Id == id);
     }
 
-    public void DeleteRecipeById(int id)
+    public async Task DeleteRecipeByIdAsync(int id)
     {
-        var recipe = GetRecipeById(id);
+        var recipe = await GetRecipeByIdAsync(id);
         if (recipe != null)
         {
             _context.Recipes.Remove(recipe);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
+    }
+
+    public async Task UpdateRecipeAsync(Recipe recipe)
+    {
+        _context.Recipes.Update(recipe);
+        await _context.SaveChangesAsync();
     }
 }
