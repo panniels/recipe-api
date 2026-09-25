@@ -25,7 +25,53 @@ namespace RecipeApi.Controllers
 
             _recipes.Add(recipe); // Add the new recipe to the list
 
+            if (recipe == null)
+            {
+                return BadRequest("Recipe cannot be null.");
+            }
+
             return CreatedAtAction(nameof(GetRecipes), new { name = recipe.Name }, recipe);
         }
+
+        [HttpGet("{id}")]
+        public IActionResult GetRecipeById(int id)
+        {
+            var recipe = _recipes.FirstOrDefault(r => r.Id == id);
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+            return Ok(recipe);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteRecipe(int id)
+        {
+            var recipe = _recipes.FirstOrDefault(r => r.Id == id);
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+            _recipes.Remove(recipe);
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateRecipe(int id, [FromBody] Recipe recipe)
+        {
+            var existingRecipe = _recipes.FirstOrDefault(r => r.Id == id);
+            if (existingRecipe == null)
+            {
+                return NotFound();
+            }
+
+            existingRecipe.Name = recipe.Name;
+            existingRecipe.CookingTime = recipe.CookingTime;
+            existingRecipe.Difficulty = recipe.Difficulty;
+            existingRecipe.Ingredients = recipe.Ingredients;
+
+            return Ok(existingRecipe);
+        }
     }
+
 }
