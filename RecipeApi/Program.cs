@@ -16,6 +16,8 @@ builder.Services.AddCors(options =>
     });
 });
 
+
+
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<RecipeDBContext>(options =>
@@ -30,6 +32,8 @@ builder.Services.AddOpenApi();
 var app = builder.Build();
 
 app.UseCors("ReactApp");
+
+app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

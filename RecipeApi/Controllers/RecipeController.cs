@@ -55,6 +55,33 @@ namespace RecipeApi.Controllers
             return NoContent();
         }
 
+        [HttpPost("{id}/image")]
+        public async Task<IActionResult> UploadImage(int id, IFormFile file)
+        {
+            var recipe = await _recipeService.GetRecipeByIdAsync(id);
+            if (recipe == null)
+                return NotFound();
+
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded.");
+
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+            Directory.CreateDirectory(uploadsFolder);
+
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            recipe.ImageUrl = $"/images/{fileName}";
+            await _recipeService.UpdateRecipeAsync(recipe);
+
+            return Ok(recipe);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateRecipe(int id, [FromBody] Recipe recipe)
         {
