@@ -7,7 +7,8 @@ const [recipes, setRecipes] = useState([]);
 useEffect(() => {
   fetch("http://localhost:5244/api/recipe")
     .then((response) => response.json())
-    .then((data) => setRecipes(data));
+    .then((data) => { console.log("Data: ", data); setRecipes(data)})
+    .catch((error) => { console.error("Error: ", error) });
 }, []);
 
   return (
@@ -17,7 +18,7 @@ useEffect(() => {
       <ul>
         {recipes.map((recipe) => (
           <li key={recipe.id}>
-            {recipe.name} - {recipe.cookingTime} minutes
+            <div>{recipe.name} - {recipe.cookingTime} minutes</div>
           </li>
         ))}
       </ul>

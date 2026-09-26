@@ -6,6 +6,16 @@ using RecipeApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ReactApp", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<RecipeDBContext>(options =>
@@ -18,6 +28,8 @@ builder.Services.AddScoped<RecipeService>();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.UseCors("ReactApp");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
