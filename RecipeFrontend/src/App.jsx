@@ -1,27 +1,21 @@
-import { useState, useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+
+import DisplayRecipes from "./Pages/DisplayRecipes";
+import CreateRecipe from "./Pages/CreateRecipe";
+import TopBar from "./Components/TopBar";
 
 
 function App() {
-const [recipes, setRecipes] = useState([]);
-
-useEffect(() => {
-  fetch("http://localhost:5244/api/recipe")
-    .then((response) => response.json())
-    .then((data) => { console.log("Data: ", data); setRecipes(data)})
-    .catch((error) => { console.error("Error: ", error) });
-}, []);
 
   return (
     <div>
-      <h1>Recipes</h1>
+      <TopBar />
 
-      <ul>
-        {recipes.map((recipe) => (
-          <li key={recipe.id}>
-            <div>{recipe.name} - {recipe.cookingTime} minutes</div>
-          </li>
-        ))}
-      </ul>
+      <Routes>
+        <Route path="/" element={<DisplayRecipes />} />
+        <Route path="/create-recipe" element={<CreateRecipe />} />
+      </Routes>
+      
     </div>
   );
 }
